@@ -1,0 +1,61 @@
+.container {
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 110px;
+
+    background: var(--pavilion-gradient);
+    background-size: contain;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.login-form-backing {
+    height: 200px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* stupid solution */
+    border-radius: calc(var(--box-outline-radius) - 3px);
+    background-color: var(--background-color);
+}
+
+.login-form {
+    font-size: 25px;
+
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form input[type="text"], input[type="password"] {
+    height: 25px;
+    color: white;
+
+    border-radius: calc(var(--box-outline-radius) - 5px);
+    border-width: var(--box-outline-width);
+    border-style: solid;
+    background-color: black;
+
+    margin-bottom: 15px;
+}
+
+.login-form-wrapper {
+    height: 200px;
+
+    position: relative;
+    padding: var(--box-outline-width);
+
+    border-radius: var(--box-outline-radius);
+    background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgb(154, 154, 154) 100%);
+}
