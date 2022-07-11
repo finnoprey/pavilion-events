@@ -13,7 +13,11 @@
 <div class="container">
     <div class="header">
         <h1 class="title">Events</h1>
-        <a href="/login">Login</a>
+        <a href="/login" class="login-button">
+            <span class="material-symbols-outlined">
+                person
+            </span>
+        </a>
     </div>
     <div class="events">
         <h2 class="events-row-heading heading-thisweek">This Week</h2>

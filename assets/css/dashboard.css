@@ -45,6 +45,14 @@
     -webkit-text-fill-color: transparent;
 }
 
+.login-button {
+    color: white;
+}
+
+.login-button span {
+    font-size: 50px;
+}
+
 .events {
     display: flex;
     flex-direction: column;
