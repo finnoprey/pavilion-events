@@ -1,3 +1,19 @@
+<?php
+    include_once("./classes/Account.php");
+
+    session_start();
+    
+    // if the user is not logged in, redirect back to login
+    if (!isset($_SESSION['account'])) {
+        $_SESSION['message'] = 'You need to be logged in to view this page.';
+        header("Location: /login.php");
+    }
+
+    $account = unserialize($_SESSION['account']);
+
+    echo($account->username);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

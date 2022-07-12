@@ -1,3 +1,23 @@
+<?php
+    include_once("./classes/Account.php");
+
+    session_start();
+
+    // if the user is not logged in, redirect back to login
+    if (!isset($_SESSION['account'])) {
+        $_SESSION['message'] = 'You need to be logged in to view this page.';
+        header("Location: /login.php");
+    }
+
+    $account = unserialize($_SESSION['account']);
+
+    // if the user is not an admin, redirect back to login
+    if($account->type != 'ADMINISTRATOR') {
+        $_SESSION['message'] = 'You need to be an admin to view this page.';
+        header("Location: /login.php");
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
