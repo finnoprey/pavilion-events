@@ -1,40 +1,45 @@
 <?php
-    include_once("../classes/Account.php");
-
-    // this function will take the user object, start the session 
-    // and redirect to the relevant page based on account type
-    function redirect_to_relevant_page(Account $account) {
-        // create session and add account to it
-        session_start();
-        $_SESSION['account'] = serialize($account);
-
-        if ($account->type == 'ORGANIZER') {
-            header("Location: /organizer.php");
-        } else if ($account->type == 'ADMINISTRATOR') {
-            header("Location: /admin.php");
-        }
-
-        exit();
-    }
-
-    function is_valid_login($username, $password) {
-        return true;
-    }
-
-    // check that the request method is post
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        // if it's not, send an error message and terminate execution
         echo('Invalid request method.');
         exit();
     }
-    
-    // get inputs from form
-    $username = $_POST['username'];
-    $password = $_POST['password'];
 
-    if (is_valid_login($username, $password)) {
-        // should get other data from database, but this is temporary test
-        $account = new Account($username, 'ORGANIZER');
-        redirect_to_relevant_page($account);
+    include_once("../classes/Account.php");
+    include_once("../utils/helpers.php");
+    include_once("../utils/helpers-sql.php");
+    $config = include('../config.php');
+
+    function redirect_to_relevant_page(Array $session) {
+        if (!isset($session) || !isset($_SESSION['account'])) redirect("/login.php");
+        $account = unserialize($session['account']);
+        if ($account->type == 'ORGANIZER') redirect("/organizer.php");
+        if ($account->type == 'ADMINISTRATOR') redirect("/admin.php");
+        exit();
+    }
+
+    $input_email = $_POST['email'];
+    $input_password = $_POST['password'];
+
+    $conn = mysqli_connect($config->db_address, $config->db_user, $config->db_password, $config->db_schema);
+    if ($conn->connect_error) {
+        die("The database could not be reached. Please contact operators.");
+    }
+
+    $user = prepared_select_single($conn, "SELECT name, email, password, type FROM accounts WHERE email=?", [$input_email]);
+    $conn->close();
+
+    $db_user_email = $user['email'];
+    $db_user_password = $user['password'];
+    $db_user_type = $user['type'];
+
+    session_start();
+    if (password_verify($input_password, $db_user_password)) {
+        $account = new Account($input_email, $db_user_type);
+        $_SESSION['account'] = serialize($account);
+        redirect_to_relevant_page($_SESSION);
+    } else {
+        session_start();
+        $_SESSION['error_message'] = 'Incorrect account password or username.';
+        header("Location: /login.php");
     }
 ?>

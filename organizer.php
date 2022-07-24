@@ -5,13 +5,13 @@
     
     // if the user is not logged in, redirect back to login
     if (!isset($_SESSION['account'])) {
-        $_SESSION['message'] = 'You need to be logged in to view this page.';
+        $_SESSION['error_message'] = 'You need to be logged in to view this page.';
         header("Location: /login.php");
     }
 
     $account = unserialize($_SESSION['account']);
 
-    echo($account->username);
+    echo("Logged in as " . $account->username);
 ?>
 
 <!DOCTYPE html>

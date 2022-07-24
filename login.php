@@ -2,9 +2,10 @@
     include_once("./classes/Account.php");
 
     session_start();
-
-    if (isset($_SESSION['message'])) {
-        $message = $_SESSION['message'];
+    
+    // render the error message sent by another page
+    if (isset($_SESSION['error_message'])) {
+        $message = $_SESSION['error_message'];
         echo('<h1>' . $message . '</h1>');
     }
 
@@ -34,8 +35,8 @@
         <div class="login-form-wrapper">
             <div class="login-form-backing">
                 <form class="login-form" action="/handlers/login_handler.php" method="post">
-                    <label for="username">Username</label>
-                    <input type="text" name="username">
+                    <label for="email">Email</label>
+                    <input type="text" name="email">
                     <label for="password">Password</label>
                     <input type="password" name="password">
                     <input type="submit" value="Submit">
