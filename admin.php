@@ -1,5 +1,4 @@
 <?php
-use function CommonMark\Render\HTML;
     include_once("./classes/Account.php");
 
     session_start();
@@ -38,8 +37,9 @@ use function CommonMark\Render\HTML;
 
             $input_email = $_POST['email'];
 
-            echo("Deleting user " . $input_email);
-            prepared_query($conn, 'DELETE FROM accounts WHERE email=?', [$input_email]);
+            prepared_query($conn, 'DELETE FROM accounts WHERE email=? AND type="ORGANIZER"', [$input_email]);
+            // the account either exists, or does not/is the admin
+            // should say: An organizer account with that meail does not exist.
         } else {
             // editing existing or creating a new user
             $input_name = $_POST['name'];
