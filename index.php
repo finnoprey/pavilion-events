@@ -1,3 +1,4 @@
 <?php
-  readfile("dashboard.php");
+  include('./utils/helpers.php');
+  redirect('/dashboard.php');
 ?>

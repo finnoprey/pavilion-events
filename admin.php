@@ -149,7 +149,7 @@
     <div class="container">
         <div class="header">
             <h1 class="title">Admin</h1>
-            <a href="/dashboard" class="dashboard-button">
+            <a href="/dashboard.php" class="dashboard-button">
                 <span class="material-symbols-outlined">
                     dashboard
                 </span>

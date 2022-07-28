@@ -1,3 +1,24 @@
+<?php
+    session_start();
+
+    include('./utils/helpers.php');
+    include('./utils/helpers_sql.php');
+    include('./utils/helpers_validation.php');
+    $config = include('config.php');
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $conn = mysqli_connect($config->db_address, $config->db_user, $config->db_password, $config->db_schema);
+        if (!$conn) {
+            $_SESSION['error_message'] = 'Could not connect to database. Please notify administrators.';
+            redirect('/login.php');
+            exit();
+        }
+
+        if (exists('search_upcoming', $_POST)) {
+            $search_term = $_POST['search_upcoming'];
+        }
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,217 +31,162 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <h1 class="title">Events</h1>
-        <a href="/login" class="login-button">
-            <span class="material-symbols-outlined">
-                person
-            </span>
-        </a>
-    </div>
-    <div class="events">
-        <h2 class="events-row-heading heading-thisweek">This Week</h2>
-        <div class="events-row">
-            <div class="event box-outlined">
-                <div class="flex-column">
-                    <img src="/assets/img/gym.png" class="event-image">
-                    <div class="flex-row">
-                        <div class="event-content-left">
-                            <h3 class="event-title">Gym Session</h3>
-                            <h4 class="event-description">
-                                Come down to the gym and work your stress off. 
-                                We’ll be doing a circuit and heaps of activities!
-                            </h4>
-                        </div>
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">schedule</span>
-                                <p>4:00pm</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">event</span>
-                                <p>Saturday, 31st of May</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">near_me</span>
-                                <p>The Gym</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">group</span>
-                                <p>Joe, Kathy & Tim</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="event box-outlined">
-                <div class="flex-column">
-                    <img src="/assets/img/fun_run.png" class="event-image">
-                    <div class="flex-row">
-                        <div class="event-content-left">
-                            <h3 class="event-title">Fun Run</h3>
-                            <h4 class="event-description">
-                                Just take a stroll, or compete to be the best. 
-                                It’s fun for everyone, this week at the fun run.
-                            </h4>
-                        </div>
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">schedule</span>
-                                <p>7:00pm</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">event</span>
-                                <p>Monday, 2nd of June</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">near_me</span>
-                                <p>Bury Park</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">group</span>
-                                <p>Markus & Jospeh</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="event box-outlined">
-                <div class="flex-column">
-                    <img src="/assets/img/basketball.png" class="event-image">
-                    <div class="flex-row">
-                        <div class="event-content-left">
-                            <h3 class="event-title">Basketball</h3>
-                            <h4 class="event-description">
-                                Enjoy a basketball game for all skill levels, 
-                                for the sake of enjoyment and a good time.
-                            </h4>
-                        </div>
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">schedule</span>
-                                <p>7:00pm</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">event</span>
-                                <p>Monday, 2nd of June</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">near_me</span>
-                                <p>Bury Park</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">group</span>
-                                <p>Markus & Jospeh</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <h2 class="events-row-heading heading-upcoming">Upcoming</h2>
-        <div class="events-row upcoming-row">
-            <div class="event box-outlined">
-                <div class="flex-column">
-                    <img src="/assets/img/meditation.png" class="event-image filter-grayscale">
-                    <div class="flex-row">
-                        <div class="event-content-left">
-                            <h3 class="event-title">Meditation</h3>
-                            <h4 class="event-description">
-                                Let it all go for a while with some mindfulness.
-                                For all ages and fitness levels, wellness is for everyone!
-                            </h4>
-                        </div>
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">schedule</span>
-                                <p>9:00pm</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">event</span>
-                                <p>Monday, 22nd of August</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">near_me</span>
-                                <p>St Kilda Beach</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">group</span>
-                                <p>Tom, Markus & Ryan</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="event box-outlined">
-                <div class="flex-column">
-                    <img src="/assets/img/indigenous.png" class="event-image filter-grayscale">
-                    <div class="flex-row">
-                        <div class="event-content-left">
-                            <h3 class="event-title">Indigenous Art</h3>
-                            <h4 class="event-description">
-                                Work on some indigenous art in this weekly activity.
-                                Learn about indigenous and aboriginal history, from 
-                                the first nations people themselves.
-                            </h4>
-                        </div>
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">schedule</span>
-                                <p>9:00pm</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">event</span>
-                                <p>Monday, 22nd of August</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">near_me</span>
-                                <p>St Kilda Beach</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">group</span>
-                                <p>Tom, Markus & Ryan</p>
+  <?php include('./handlers/modal_renderer.php'); ?>
+  <div class="container">
+      <div class="header">
+          <h1 class="title">Events</h1>
+          <a href="/login.php" class="login-button">
+              <span class="material-symbols-outlined">
+                  person
+              </span>
+          </a>
+      </div>
+      <div class="events">
+          <h2 class="events-row-heading heading-thisweek">This Week</h2>
+          <div class="events-row">
+              <?php
+              $conn = mysqli_connect($config->db_address, $config->db_user, $config->db_password, $config->db_schema);
+              if ($conn->connect_error) {
+                  exit('The database could not be reached. Please contact operators.');
+              }
+
+              $events = basic_query($conn, 'SELECT name, image, description, organizers, place, date FROM events ORDER BY date');
+              while($event = $events->fetch_assoc()) {
+                  $name = $event['name'];
+                  $description = $event['description'];
+                  $image = $event['image'];
+                  $organizers = $event['organizers'];
+                  $place = $event['place'];
+                  $date = date('Y-m-d H:i', strtotime($event['date']));
+                  
+                  $formatted_time = date('g:ia', strtotime($event['date']));
+                  $formatted_date_day = date('D', strtotime($event['date']));
+                  $formatted_date_date = date('jS', strtotime($event['date']));
+                  $formatted_date_month = date('M', strtotime($event['date']));
+
+                  $first_day = date('Y-m-d', strtotime('sunday last week'));  
+                  $last_day = date('Y-m-d', strtotime('monday next week'));  
+                  if($date > $first_day && $date < $last_day) {
+                      echo <<<HTML
+                      <div class="event box-outlined">
+                          <div class="flex-column">
+                              <img src="/uploads/event-images/$image" class="event-image">
+                              <div class="flex-row">
+                                  <div class="event-content-left">
+                                      <h3 class="event-title">$name</h3>
+                                      <h4 class="event-description">$description</h4>
+                                  </div>
+                                  <div class="event-details">
+                                      <div class="event-detail">
+                                          <span class="material-symbols-outlined">schedule</span>
+                                          <p>$formatted_time</p>
+                                      </div>
+                                      <div class="event-detail">
+                                          <span class="material-symbols-outlined">event</span>
+                                          <p>$formatted_date_day, $formatted_date_date of $formatted_date_month</p>
+                                      </div>
+                                      <div class="event-detail">
+                                          <span class="material-symbols-outlined">near_me</span>
+                                          <p>$place</p>
+                                      </div>
+                                      <div class="event-detail">
+                                          <span class="material-symbols-outlined">group</span>
+                                          <p>$organizers</p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  HTML;
+                  } 
+              }
+              ?>
+          </div>
+          <div class="flex-row">
+            <h2 class="events-row-heading heading-upcoming">Upcoming</h2>
+            <form action="dashboard.php" method="POST">
+              <input type="text" name="search_upcoming" class="search-upcoming">
+            </form>
+          </div>
+          <div class="events-row upcoming-row">
+          <?php
+            $conn = mysqli_connect($config->db_address, $config->db_user, $config->db_password, $config->db_schema);
+            if ($conn->connect_error) {
+                exit('The database could not be reached. Please contact operators.');
+            }
+
+            $events = basic_query($conn, 'SELECT name, image, description, organizers, place, date FROM events ORDER BY date');
+            while ($event = $events->fetch_assoc()) {
+                $name = $event['name'];
+                $description = $event['description'];
+                $image = $event['image'];
+                $organizers = $event['organizers'];
+                $place = $event['place'];
+                $date = date('Y-m-d H:i', strtotime($event['date']));
+                $formatted_time = date('g:ia', strtotime($event['date']));
+                $formatted_date_day = date('D', strtotime($event['date']));
+                $formatted_date_date = date('jS', strtotime($event['date']));
+                $formatted_date_month = date('M', strtotime($event['date']));
+
+                if (isset($search_term)) {
+                    $should_display_event = false;
+                    $search_term_lower = strtolower($search_term);
+                    if (str_contains(strtolower($name), $search_term_lower)) {
+                        $should_display_event = true;
+                    } elseif (str_contains(strtolower($description), $search_term_lower)) {
+                        $should_display_event = true;
+                    } elseif (str_contains(strtolower($organizers), $search_term_lower)) {
+                        $should_display_event = true;
+                    } elseif (str_contains(strtolower($place), $search_term_lower)) {
+                        $should_display_event = true;
+                    } elseif (str_contains(strtolower($date), $search_term_lower)) {
+                        $should_display_event = true;
+                    }
+                    
+                    if (!$should_display_event) {
+                        continue;
+                    }
+                }
+
+                $last_sunday = date('Y-m-d', strtotime('sunday last week'));  
+                $next_monday = date('Y-m-d', strtotime('monday next week'));  
+                if(!($date > $last_sunday && $date < $next_monday)) {
+                    echo <<<HTML
+                    <div class="event box-outlined">
+                        <div class="flex-column">
+                            <img src="/uploads/event-images/$image" class="event-image filter-grayscale">
+                            <div class="flex-row">
+                                <div class="event-content-left">
+                                    <h3 class="event-title">$name</h3>
+                                    <h4 class="event-description">$description</h4>
+                                </div>
+                                <div class="event-details">
+                                    <div class="event-detail">
+                                        <span class="material-symbols-outlined">schedule</span>
+                                        <p>$formatted_time</p>
+                                    </div>
+                                    <div class="event-detail">
+                                        <span class="material-symbols-outlined">event</span>
+                                        <p>$formatted_date_day, $formatted_date_date of $formatted_date_month</p>
+                                    </div>
+                                    <div class="event-detail">
+                                        <span class="material-symbols-outlined">near_me</span>
+                                        <p>$place</p>
+                                    </div>
+                                    <div class="event-detail">
+                                        <span class="material-symbols-outlined">group</span>
+                                        <p>$organizers</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="event box-outlined">
-                <div class="flex-column">
-                    <img src="/assets/img/paint.png" class="event-image filter-grayscale">
-                    <div class="flex-row">
-                        <div class="event-content-left">
-                            <h3 class="event-title">Painting</h3>
-                            <h4 class="event-description">
-                                Never painted before? Or a seasoned expert? 
-                                Well regardless, don't fret! Come down and 
-                                have a blast painting with our expert team.
-                            </h4>
-                        </div>
-                        <div class="event-details">
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">schedule</span>
-                                <p>9:00pm</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">event</span>
-                                <p>Monday, 22nd of August</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">near_me</span>
-                                <p>St Kilda Beach</p>
-                            </div>
-                            <div class="event-detail">
-                                <span class="material-symbols-outlined">group</span>
-                                <p>Tom, Markus & Ryan</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                HTML;
+                } 
+            }
+            ?>
+          </div>
+      </div>
+  </div>
 </body>
 </html>

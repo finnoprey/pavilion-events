@@ -150,3 +150,22 @@
 .upcoming-row {
     margin-bottom: 100px;
 }
+
+.search-upcoming {
+    margin-top: 37px;
+    margin-left: 10px;
+
+    height: 30px;
+    width: 300px;
+    color: white;
+    font-size: 16px;
+    padding-left: 3px;
+
+    border-radius: calc(var(--box-outline-radius) - 5px);
+    border-width: calc(var(--box-outline-width) - 1px);
+    border-style: solid;
+    border-color: rgb(142, 142, 142);
+    background-color: black;
+
+    margin-bottom: 4px;
+}

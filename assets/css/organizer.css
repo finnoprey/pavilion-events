@@ -111,12 +111,17 @@
 }
 
 .modify-section {
-  width: 24vw;
+  width: 330px;
   height: 550px;
 }
 
 .box-create {
   height: 310px;
+  width: 330px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 input[type="submit"] {

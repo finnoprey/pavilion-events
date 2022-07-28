@@ -3,6 +3,8 @@
 
     include("./classes/Account.php");
     include('./utils/helpers.php');
+    include('./utils/helpers_sql.php');
+    include('./utils/helpers_validation.php');
     $config = include('config.php');
     
     // if the user is not logged in, redirect back to login
@@ -23,10 +25,107 @@
         }
 
         if (isset($_POST['delete'])) {
-            exit('Delete');
+            if (!exists('name', $_POST)) {
+                $_SESSION['error_message'] = 'Please enter the full name of the event you wish to delete.';
+                redirect('/organizer.php');
+                exit();
+            }
+            
+            $input_name = $_POST['name'];
+            $sql = 'SELECT name type FROM events WHERE name=?';
+            $event = prepared_select_single($conn, $sql, [$input_name]);
+
+            if (is_null($event)) {
+                $_SESSION['error_message'] = 'An event with that name does not exist.';
+                redirect('/organizer.php');
+                exit();
+            }
+
+            $sql = 'DELETE FROM events WHERE name=?';
+            prepared_query($conn, $sql, [$input_name]);
+            $_SESSION['success_message'] = 'That event has been deleted.';
+            redirect('/organizer.php');
+            exit();
+
         } elseif (isset($_POST['submit'])) {
-            exit('Create');
+            $errors = [];
+
+            if (!exists('name', $_POST)) {
+                array_push($errors, 'Please enter a name.');
+            }
+
+            if (!exists('description', $_POST)) {
+                array_push($errors, 'Please enter a description.');
+            }
+
+            if (!exists('organizers', $_POST)) {
+                array_push($errors, 'Please enter at least one organizer.');
+            }
+
+            if (!exists('place', $_POST)) {
+                array_push($errors, 'Please enter a place.');
+            }
+
+            if (!exists('time', $_POST)) {
+                array_push($errors, 'Please enter a time.');
+            }
+
+            if (!exists('date', $_POST)) {
+                array_push($errors, 'Please enter a date.');
+            }
+
+            if (!exists('image', $_FILES)) {
+                array_push($errors, 'Please include an image.');
+            }
+
+            if (sizeof($errors) != 0) {
+                $_SESSION['error_message'] = generate_multiline_string($errors);
+                redirect('/organizer.php');
+                exit();
+            }
+
+            $date_time = $_POST['date'] . ' ' . $_POST['time'];
+
+            $name = $_POST['name'];
+            $description = $_POST['description'];
+            $organizers = $_POST['organizers'];
+            $place = $_POST['place'];
+            $date = date('Y-m-d H:i', strtotime($date_time));
+
+            $image_dir = 'uploads/event-images/';
+            $image_name = $_FILES['image']['name'];
+            $image_size = $_FILES['image']['size'];
+            $image_tmp = $_FILES['image']['tmp_name'];
+            $image_type = $_FILES['image']['type'];
+            $image_type = strtolower(pathinfo($image_dir . $image_name, PATHINFO_EXTENSION));
+
+            $extensions = ['jpeg', 'jpg', 'png'];
+
+            if (!in_array($image_type, $extensions)) {
+                $_SESSION['error_message'] = 'Please upload a jpeg, jpg or png file!';
+                redirect('/organizer.php');
+                exit();
+            }
+
+            if ($image_size > 10485760){
+                $_SESSION['error_message'] = 'The image needs to be under 10mb.';
+                redirect('/organizer.php');
+                exit();
+            }
+
+            $file_name = str_replace(' ', '_', strtolower($name));
+            $file_name_with_extension = $file_name . '.' . $image_type;
+
+            move_uploaded_file($image_tmp, $image_dir . $file_name_with_extension);
+
+            $sql = 'INSERT INTO events (name, image, description, organizers, place, date) VALUES (?,?,?,?,?,?)';
+            prepared_query($conn, $sql, [$name, $file_name_with_extension, $description, $organizers, $place, $date]);
+
+            $_SESSION['success_message'] = 'The event has been created.';
+            redirect('/organizer.php');
+            exit();
         }
+        $conn->close();
     }
 ?>
 
@@ -46,7 +145,7 @@
   <div class="container">
       <div class="header">
           <h1 class="title">Organizer</h1>
-          <a href="/dashboard" class="dashboard-button">
+          <a href="/dashboard.php" class="dashboard-button">
               <span class="material-symbols-outlined">
                   dashboard
               </span>
@@ -56,43 +155,37 @@
         <div class="events-section flex-column">
           <h1 class="heading">Events</h1>
           <div class="flex-row events-grid">
-            <div class="box-outlined events-section-box">
-              <img src="assets/img/gym.png">
-              <div class="events-section-box-text">
-                <h2>Gym Session</h2>
-                <p>Come down to the gym and work your stress off. We’ll be doing a circuit and heaps of activities!</p>
-              </div>
-            </div>
-            <div class="box-outlined events-section-box">
-              <img src="assets/img/fun_run.png">
-              <div class="events-section-box-text">
-                <h2>Fun Run</h2>
-                <p>Just take a stroll, or compete to be the best. It’s fun for everyone at this weeks fun run.</p>
-              </div>
-            </div>
-            <div class="box-outlined events-section-box">
-              <img src="assets/img/basketball.png">
-              <div class="events-section-box-text">
-                <h2>Basketball</h2>
-                <p>Enjoy a basketball game for all skill levels, for the sake of enjoyment and a good time.</p>
-              </div>
-            </div>
-            <div class="box-outlined events-section-box">
-              <img src="assets/img/meditation.png">
-              <div class="events-section-box-text">
-                <h2>Super Woman</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce at est eu ex sagittis dui.</p>
-              </div>
-            </div>
+            <?php
+            $conn = mysqli_connect($config->db_address, $config->db_user, $config->db_password, $config->db_schema);
+            if ($conn->connect_error) {
+                exit('The database could not be reached. Please contact operators.');
+            }
+
+            $events = basic_query($conn, 'SELECT name, image, description FROM events');
+                while($event = $events->fetch_assoc()) {
+                    $name = $event['name'];
+                    $description = $event['description'];
+                    $image = $event['image'];
+                    echo <<<HTML
+                        <div class="box-outlined events-section-box">
+                            <img src="uploads/event-images/$image">
+                            <div class="events-section-box-text">
+                                <h2>$name</h2>
+                                <p>$description</p>
+                            </div>
+                        </div>
+                    HTML;
+                }
+            ?>
           </div>
         </div>
         <div class="modify-section flex-column">
         <h1 class="heading">Add</h1>
           <div class="box-outlined box-form box-create">
-            <form action="organizer.php" method="POST">
+            <form action="organizer.php" method="POST" enctype="multipart/form-data">
               <div class="flex-column">
                 <label for="name">Name</label>
-                <input name="name" type="text">
+                <input name="name" type="text" style="width: 80%;">
               </div>
               <div class="flex-column">
                 <label for="description">Description</label>
@@ -118,6 +211,7 @@
                   <input name="date" type="date" style="width: 120px;">
                 </div>
               </div>
+              <input name="image" type="file">
               <input type="submit" name="submit" value="Create">
             </form>
           </div>
