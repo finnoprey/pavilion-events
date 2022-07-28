@@ -52,3 +52,63 @@ body {
     -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
     filter: grayscale(100%);
 }
+
+.modal[open] {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;   
+
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    margin-left: -175px;
+    margin-top: -85px;
+    z-index: 1000;
+
+    width: 350px;
+    height: 170px;
+
+    padding: 20px;
+
+    background: rgb(14, 14, 14);
+    border-radius: 12px;
+    color: white;
+
+    text-align: center;
+}
+
+.error {
+    border-color: rgb(147, 22, 22);
+}
+
+.error h1 {
+    color: rgb(213, 43, 43);
+}
+
+.warning {
+    border-color: rgb(169, 106, 29);
+}
+
+.warning h1 {
+    color: rgb(226, 165, 35);
+}
+
+.success {
+    border-color: rgb(45, 155, 33);
+}
+
+.success h1 {
+    color: rgb(58, 215, 41);
+}
+
+.modal button {
+    margin-top: 10px;
+
+    height: 20px;
+    width: 70px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 3px;
+    border-width: 1px;
+}

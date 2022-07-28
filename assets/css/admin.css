@@ -101,3 +101,20 @@
 .modify-section .box-outlined {
     height: 100%;
 }
+
+.account-image {
+    width: 110px;
+    height: 110px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(0, 255, 255, 0.183);
+    border-radius: 10000px;
+}
+
+.account-image-letter {
+    font-size: 70px;
+    font-weight: 600;
+}
