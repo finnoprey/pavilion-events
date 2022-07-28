@@ -1,6 +1,17 @@
+/**
+ * Software Development SAT - Pavilion Events Management System (PEMS)
+ *
+ * To be included within other pages, the modal renderer finds and
+ * renders messages set in the users session to the screen in popup.
+ *
+ * @author Finn Scicluna-O'Prey <finn@oprey.co>
+ *
+ */
+
 <?php
     include_once('./utils/helpers_validation.php');
 
+    // Check if any of the possible messages are set
     if (exists('error_message', $_SESSION)) {
         $message = $_SESSION['error_message'];
         // convert the new line characters to <br> elements

@@ -1,3 +1,13 @@
+/**
+ * Software Development SAT - Pavilion Events Management System (PEMS)
+ *
+ * The login page provides a simple form input for users to log in
+ * to PEMS, by posting to a login handler.
+ *
+ * @author Finn Scicluna-O'Prey <finn@oprey.co>
+ *
+ */
+
 <?php
     include("./classes/Account.php");
 

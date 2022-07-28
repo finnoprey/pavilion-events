@@ -1,3 +1,13 @@
+/**
+ * Software Development SAT - Pavilion Events Management System (PEMS)
+ *
+ * The main page that displays all events in the current and 
+ * upcoming weeks.
+ *
+ * @author Finn Scicluna-O'Prey <finn@oprey.co>
+ *
+ */
+
 <?php
     session_start();
 

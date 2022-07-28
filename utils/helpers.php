@@ -1,3 +1,12 @@
+/**
+ * Software Development SAT - Pavilion Events Management System (PEMS)
+ *
+ * General purpose helper functions for use throughout the solution.
+ *
+ * @author Finn Scicluna-O'Prey <finn@oprey.co>
+ *
+ */
+
 <?php
   function redirect($url) {
     header("Location: " . $url);

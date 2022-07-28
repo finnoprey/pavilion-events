@@ -1,4 +1,15 @@
+/**
+ * Software Development SAT - Pavilion Events Management System (PEMS)
+ *
+ * The handler that the login page posts data to. This page verifies
+ * account credentials and redirects users to the relevant page.
+ *
+ * @author Finn Scicluna-O'Prey <finn@oprey.co>
+ *
+ */
+
 <?php
+    // The user should not be able to access this page without posting.
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         echo('Invalid request method.');
         exit();
@@ -30,6 +41,7 @@
         array_push($errors, 'Please enter a password.');
     }
 
+    // If errors have occured, generate an error message and exit.
     if (sizeof($errors) != 0) {
         $_SESSION['error_message'] = generate_multiline_string($errors);
         redirect('/login.php');
@@ -61,6 +73,7 @@
     $db_user_type = $user['type'];
 
     if (password_verify($input_password, $db_user_password)) {
+        // Create, then add the serialized account object to the session
         $account = new Account($input_email, $db_user_type);
         $_SESSION['account'] = serialize($account);
         redirect_to_relevant_page($_SESSION);

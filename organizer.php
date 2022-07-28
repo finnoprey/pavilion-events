@@ -1,3 +1,13 @@
+/**
+ * Software Development SAT - Pavilion Events Management System (PEMS)
+ *
+ * The organizer page that allows for the creation and deletion of
+ * events including a compact view of all events.
+ *
+ * @author Finn Scicluna-O'Prey <finn@oprey.co>
+ *
+ */
+
 <?php
     session_start();
 
