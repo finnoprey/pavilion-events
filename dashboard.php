@@ -6,6 +6,7 @@
     include('./utils/helpers_validation.php');
     $config = include('config.php');
 
+    // Check if user is trying to post, or in this case, trying to filter/search the upcoming list.
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $conn = mysqli_connect($config->db_address, $config->db_user, $config->db_password, $config->db_schema);
         if (!$conn) {
@@ -14,6 +15,7 @@
             exit();
         }
 
+        // Set the search term to the input they entered
         if (exists('search_upcoming', $_POST)) {
             $search_term = $_POST['search_upcoming'];
         }
@@ -58,7 +60,7 @@
                   $organizers = $event['organizers'];
                   $place = $event['place'];
                   $date = date('Y-m-d H:i', strtotime($event['date']));
-                  
+                  // Convert date into many parts for it's display in the event details
                   $formatted_time = date('g:ia', strtotime($event['date']));
                   $formatted_date_day = date('D', strtotime($event['date']));
                   $formatted_date_date = date('jS', strtotime($event['date']));
@@ -66,6 +68,7 @@
 
                   $first_day = date('Y-m-d', strtotime('sunday last week'));  
                   $last_day = date('Y-m-d', strtotime('monday next week'));  
+                  // Only display events that are in the current week
                   if($date > $first_day && $date < $last_day) {
                       echo <<<HTML
                       <div class="event box-outlined">
@@ -123,33 +126,29 @@
                 $organizers = $event['organizers'];
                 $place = $event['place'];
                 $date = date('Y-m-d H:i', strtotime($event['date']));
+                // Convert date into many parts for it's display in the event details
                 $formatted_time = date('g:ia', strtotime($event['date']));
                 $formatted_date_day = date('D', strtotime($event['date']));
                 $formatted_date_date = date('jS', strtotime($event['date']));
                 $formatted_date_month = date('M', strtotime($event['date']));
 
+                // Check if search term is inside any of the event details
                 if (isset($search_term)) {
-                    $should_display_event = false;
                     $search_term_lower = strtolower($search_term);
-                    if (str_contains(strtolower($name), $search_term_lower)) {
-                        $should_display_event = true;
-                    } elseif (str_contains(strtolower($description), $search_term_lower)) {
-                        $should_display_event = true;
-                    } elseif (str_contains(strtolower($organizers), $search_term_lower)) {
-                        $should_display_event = true;
-                    } elseif (str_contains(strtolower($place), $search_term_lower)) {
-                        $should_display_event = true;
-                    } elseif (str_contains(strtolower($date), $search_term_lower)) {
-                        $should_display_event = true;
-                    }
-                    
-                    if (!$should_display_event) {
+                    if (!(str_contains(strtolower($name), $search_term_lower) 
+                     || str_contains(strtolower($description), $search_term_lower) 
+                     || str_contains(strtolower($organizers), $search_term_lower) 
+                     || str_contains(strtolower($place), $search_term_lower) 
+                     || str_contains(strtolower($date), $search_term_lower))) {
+                        // Skip displaying this event if it doesn't include any of the search terms
                         continue;
                     }
                 }
 
                 $last_sunday = date('Y-m-d', strtotime('sunday last week'));  
                 $next_monday = date('Y-m-d', strtotime('monday next week'));  
+
+                // Only display events that aren't in the current week
                 if(!($date > $last_sunday && $date < $next_monday)) {
                     echo <<<HTML
                     <div class="event box-outlined">

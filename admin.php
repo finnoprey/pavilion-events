@@ -184,17 +184,20 @@
         </div>
         <div class="modify-section flex-column">
             <h1 class="heading">Create Or Edit</h1>
-            <div class="box-outlined">
+            <div class="box-outlined box-form">
             <form action="admin.php" method="POST">
-                <label for="email">Email</label>
-                <input name="email" type="email">
-                <br>
-                <label for="name">Name</label>
-                <input name="name" type="text">
-                <br>
-                <label for="password">Password</label>
-                <input name="password" type="password">
-                <br>
+                <div class="flex-column">
+                    <label for="email">Email</label>
+                    <input name="email" type="email" style="width: 200px;">
+                </div>
+                <div class="flex-column">
+                    <label for="name">Name</label>
+                    <input name="name" type="text" style="width: 200px;">
+                </div>
+                <div class="flex-column">
+                    <label for="password">Password</label>
+                    <input name="password" type="password" style="width: 200px;">
+                    </div>
                 <input type="submit" name="submit" value="Submit">
                 <input type="submit" name="delete" value="Delete">
             </form>

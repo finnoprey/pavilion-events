@@ -112,12 +112,12 @@
 
 .modify-section {
   width: 330px;
-  height: 550px;
+  height: 600px;
 }
 
 .box-create {
-  height: 310px;
   width: 330px;
+  height: 380px;
 
   display: flex;
   justify-content: center;
@@ -125,23 +125,26 @@
 }
 
 input[type="submit"] {
-  padding: 5px;
+  padding: 7px;
   border-style: none;
   border-radius: 4px;
 }
 
-.box-create input[type="submit"] {
+input[name="submit"] {
+  margin-top: 5px;
   background-color: green;
+  width: 100%;
 }
 
 .box-delete {
   height: 80px;
 }
 
-.box-delete input[type="submit"] {
+input[name="delete"] {
   background-color: red;
   height: 30px;
-  margin-left: 10px;
+  width: 70px;
+  margin-left: 10px;  
 }
 
 
@@ -173,6 +176,7 @@ input[type="submit"] {
   height: 80px;
 }
 
+/* This makes the browser change the in built icons to white so they contrast the background */
 input {
   color-scheme: dark;
 }

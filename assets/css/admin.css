@@ -94,8 +94,8 @@
 }
 
 .modify-section {
-    width: 30vw;
-    height: 550px;
+    width: 300px;
+    height: 500px;
 }
 
 .modify-section .box-outlined {
@@ -117,4 +117,52 @@
 .account-image-letter {
     font-size: 70px;
     font-weight: 600;
+}
+
+.box-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+}
+
+.box-form label {
+    font-size: 24px;
+}
+
+
+.box-form input:not([type="submit"]) {
+    height: 20px;
+    color: white;
+    font-size: 18px;
+    padding-left: 3px;
+
+    width: 80%;
+
+    border-radius: calc(var(--box-outline-radius) - 5px);
+    border-width: calc(var(--box-outline-width) - 1px);
+    border-style: solid;
+    border-color: rgb(142, 142, 142);
+    background-color: black;
+
+    margin-bottom: 4px;
+}
+
+.box-form input[type="submit"] {
+    border-radius: 5px;
+    padding: 7px;
+    border-style: none;
+}
+
+input[name="submit"] {
+    margin-top: 5px;
+    background-color: rgb(36, 100, 36);
+    color: white;
+    width: 120px;
+}
+
+input[name="delete"] {
+    background-color: rgb(159, 36, 36);
+    color: white;
+    width: 80px;
 }

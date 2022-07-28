@@ -32,7 +32,7 @@
             }
             
             $input_name = $_POST['name'];
-            $sql = 'SELECT name type FROM events WHERE name=?';
+            $sql = 'SELECT name, image FROM events WHERE name=?';
             $event = prepared_select_single($conn, $sql, [$input_name]);
 
             if (is_null($event)) {
@@ -43,10 +43,10 @@
 
             $sql = 'DELETE FROM events WHERE name=?';
             prepared_query($conn, $sql, [$input_name]);
+            unlink('uploads/event-images/' . $event['image']);
+            exit();
             $_SESSION['success_message'] = 'That event has been deleted.';
             redirect('/organizer.php');
-            exit();
-
         } elseif (isset($_POST['submit'])) {
             $errors = [];
 
@@ -92,6 +92,15 @@
             $place = $_POST['place'];
             $date = date('Y-m-d H:i', strtotime($date_time));
 
+            $file_name = str_replace(' ', '_', strtolower($name));
+            $existing_images = glob('./uploads/event-images/' . $file_name . '.*');
+            
+            if (sizeof($existing_images) > 0) {
+              $_SESSION['error_message'] = 'An event with that name already exists.';
+                redirect('/organizer.php');
+                exit();
+            }
+
             $image_dir = 'uploads/event-images/';
             $image_name = $_FILES['image']['name'];
             $image_size = $_FILES['image']['size'];
@@ -113,7 +122,6 @@
                 exit();
             }
 
-            $file_name = str_replace(' ', '_', strtolower($name));
             $file_name_with_extension = $file_name . '.' . $image_type;
 
             move_uploaded_file($image_tmp, $image_dir . $file_name_with_extension);
@@ -161,7 +169,7 @@
                 exit('The database could not be reached. Please contact operators.');
             }
 
-            $events = basic_query($conn, 'SELECT name, image, description FROM events');
+            $events = basic_query($conn, 'SELECT name, image, description FROM events ORDER BY date');
                 while($event = $events->fetch_assoc()) {
                     $name = $event['name'];
                     $description = $event['description'];
@@ -211,7 +219,10 @@
                   <input name="date" type="date" style="width: 120px;">
                 </div>
               </div>
-              <input name="image" type="file">
+              <div class="flex-column">
+                  <label for="image">Image</label>
+                  <input name="image" type="file">
+                </div>
               <input type="submit" name="submit" value="Create">
             </form>
           </div>
