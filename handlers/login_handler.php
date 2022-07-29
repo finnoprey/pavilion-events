@@ -1,14 +1,14 @@
-/**
- * Software Development SAT - Pavilion Events Management System (PEMS)
- *
- * The handler that the login page posts data to. This page verifies
- * account credentials and redirects users to the relevant page.
- *
- * @author Finn Scicluna-O'Prey <finn@oprey.co>
- *
- */
-
 <?php
+    /**
+     * Software Development SAT - Pavilion Events Management System (PEMS)
+     *
+     * The handler that the login page posts data to. This page verifies
+     * account credentials and redirects users to the relevant page.
+     *
+     * @author Finn Scicluna-O'Prey <finn@oprey.co>
+     *
+     */
+
     // The user should not be able to access this page without posting.
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         echo('Invalid request method.');
@@ -23,6 +23,10 @@
     include('../utils/helpers_validation.php');
     $config = include('../config.php');
 
+    /**
+     * Redirects the user to the relevant page based on their account type. *
+     * @param Array $session
+     */
     function redirect_to_relevant_page(Array $session) {
         if (!isset($session) || !isset($_SESSION['account'])) redirect('/login.php');
         $account = unserialize($session['account']);

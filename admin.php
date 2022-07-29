@@ -1,14 +1,14 @@
-/**
- * Software Development SAT - Pavilion Events Management System (PEMS)
- *
- * The administrative page of PEMS, allowing for the creation, editing
- * and deletion organizer accounts.
- *
- * @author Finn Scicluna-O'Prey <finn@oprey.co>
- *
- */
-
 <?php
+    /**
+     * Software Development SAT - Pavilion Events Management System (PEMS)
+     *
+     * The administrative page of PEMS, allowing for the creation, editing
+     * and deletion organizer accounts.
+     *
+     * @author Finn Scicluna-O'Prey <finn@oprey.co>
+     *
+     */
+
     session_start();
 
     include('./classes/Account.php');
@@ -17,16 +17,17 @@
     include('./utils/helpers_validation.php');
     $config = include('config.php');
 
-    // if the user is not logged in, redirect back to login
+    // If the user is not logged in, redirect back to login
     if (!isset($_SESSION['account'])) {
         $_SESSION['error_message'] = 'You need to be logged in to view this page.';
         redirect('/login.php');
         exit();
     }
 
+    // Get the account object from the session
     $account = unserialize($_SESSION['account']);
 
-    // if the user is not an admin, redirect back to login
+    // If the user is not an admin, redirect back to login
     if($account->type != 'ADMINISTRATOR') {
         $_SESSION['error_message'] = 'You need to be an admin to view this page.';
         redirect('/login.php');
@@ -42,6 +43,8 @@
         }
         
         if (isset($_POST['delete'])) {
+            // User is trying to delete an account
+
             if (!exists('email', $_POST)) {
                 $_SESSION['error_message'] = 'Please enter the email of the account you wish to delete.';
                 redirect('/admin.php');
@@ -58,9 +61,8 @@
                 exit();
             }
 
-            $db_user_type = $user['type'];
-
-            if ($db_user_type == 'ADMINISTRATOR') {
+            // Check that the account they wish to delete is not the administrator
+            if ($user['type'] == 'ADMINISTRATOR') {
                 $_SESSION['error_message'] = 'You cannot delete an administrator account.';
                 redirect('/admin.php');
                 exit();
@@ -72,6 +74,8 @@
             redirect('/admin.php');
             exit();
         } elseif (isset($_POST['submit'])) {
+            // User is creating or editing an account
+            
             if (!exists('email', $_POST)) {
                 $_SESSION['error_message'] = 'Please enter an email.';
                 redirect('/admin.php');
@@ -82,7 +86,7 @@
             $sql = 'SELECT email FROM accounts WHERE email=?';
             $account = prepared_select_single($conn, $sql, [$input_email]);
             if ($account == null) {
-                // Administrator is creating a new account
+                // User is creating a new account
                 $errors = [];
 
                 if (!exists('name', $_POST)) {
@@ -110,7 +114,7 @@
                 redirect('/admin.php');
                 exit();
             } else {
-                // Administrator is editing an existing account
+                // User is editing an existing account
                 $messages = [];
                 
                 if (exists('name', $_POST)) {
@@ -159,7 +163,7 @@
     <div class="container">
         <div class="header">
             <h1 class="title">Admin</h1>
-            <a href="/dashboard.php" class="dashboard-button">
+            <a href="/" class="dashboard-button">
                 <span class="material-symbols-outlined">
                     dashboard
                 </span>
@@ -198,15 +202,15 @@
             <form action="admin.php" method="POST">
                 <div class="flex-column">
                     <label for="email">Email</label>
-                    <input name="email" type="email" style="width: 200px;">
+                    <input name="email" type="email" style="width: 240px;">
                 </div>
                 <div class="flex-column">
                     <label for="name">Name</label>
-                    <input name="name" type="text" style="width: 200px;">
+                    <input name="name" type="text" style="width: 240px;">
                 </div>
                 <div class="flex-column">
                     <label for="password">Password</label>
-                    <input name="password" type="password" style="width: 200px;">
+                    <input name="password" type="password" style="width: 240px;">
                     </div>
                 <input type="submit" name="submit" value="Submit">
                 <input type="submit" name="delete" value="Delete">

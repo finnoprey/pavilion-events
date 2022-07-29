@@ -1,6 +1,8 @@
 <?php
     class Account {
+        /** @var string $username The account username, often an email **/
         public $username;
+        /** @var string $type The type of the users account **/
         public $type;
 
         function __construct(string $username, string $type) {
