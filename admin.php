@@ -104,6 +104,23 @@
                 }
 
                 $input_name = $_POST['name'];
+
+                $errors = [];
+
+                if (strlen($input_name) > 128) {
+                    array_push($errors, 'Please enter a name under 128 characters.');
+                }
+
+                if (strlen($input_email) > 128) {
+                    array_push($errors, 'Please enter an email under 128 characters.');
+                }
+
+                if (sizeof($errors) != 0) {
+                    $_SESSION['error_message'] = generate_multiline_string($errors);
+                    redirect('/admin.php');
+                    exit();
+                }
+
                 $input_password = $_POST['password'];
                 $hashed_password = password_hash($input_password, PASSWORD_DEFAULT);
 
@@ -202,7 +219,7 @@
             <form action="admin.php" method="POST">
                 <div class="flex-column">
                     <label for="email">Email</label>
-                    <input name="email" type="email" style="width: 240px;">
+                    <input name="email" type="email" style="width: 240px;" required>
                 </div>
                 <div class="flex-column">
                     <label for="name">Name</label>

@@ -102,6 +102,30 @@
             $place = $_POST['place'];
             $date = date('Y-m-d H:i', strtotime($date_time));
 
+            $errors = [];
+
+            if (strlen($name) > 512) {
+                array_push($errors, 'Please enter a name under 512 characters.');
+            }
+
+            if (strlen($description) > 1024) {
+                array_push($errors, 'Please enter a description under 1024 characters.');
+            }
+
+            if (strlen($organizers) > 512) {
+                array_push($errors, 'Please a list of organizers under 512 characters.');
+            }
+
+            if (strlen($place) > 512) {
+                array_push($errors, 'Please enter a place name under 512 characters.');
+            }
+
+            if (sizeof($errors) != 0) {
+                $_SESSION['error_message'] = generate_multiline_string($errors);
+                redirect('/organizer.php');
+                exit();
+            }
+
             $file_name = str_replace(' ', '_', strtolower($name));
             $existing_images = glob('./uploads/event-images/' . $file_name . '.*');
             
