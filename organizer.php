@@ -54,9 +54,9 @@
             $sql = 'DELETE FROM events WHERE name=?';
             prepared_query($conn, $sql, [$input_name]);
             unlink('uploads/event-images/' . $event['image']);
-            exit();
             $_SESSION['success_message'] = 'That event has been deleted.';
             redirect('/organizer.php');
+            exit();
         } elseif (isset($_POST['submit'])) {
             $errors = [];
 

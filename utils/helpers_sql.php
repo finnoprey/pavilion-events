@@ -9,6 +9,11 @@
      *
      */
 
+    /**
+     * Much of the code from this file is derived or in some way based 
+     * upon functions found at https://phpdelusions.net/mysqli_examples/prepared_select
+     */
+
     function basic_query($mysqli, $sql) {
         $stmt = $mysqli->prepare($sql);
         $stmt->execute();

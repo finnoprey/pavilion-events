@@ -117,7 +117,7 @@
             </div>
             <div class="flex-row">
                 <h2 class="events-row-heading heading-upcoming">Upcoming</h2>
-                <form action="dashboard.php" method="POST">
+                <form action="/" method="POST">
                 <input type="text" name="search_upcoming" class="search-upcoming">
                 </form>
             </div>

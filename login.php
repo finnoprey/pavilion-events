@@ -37,7 +37,7 @@
                 <div class="login-form-backing">
                     <form class="login-form" action="/handlers/login_handler.php" method="post">
                         <label for="email">Email</label>
-                        <input type="text" name="email" required>
+                        <input type="email" name="email" required>
                         <label for="password">Password</label>
                         <input type="password" name="password" required>
                         <input type="submit" value="Submit">

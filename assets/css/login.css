@@ -38,7 +38,7 @@
     flex-direction: column;
 }
 
-.login-form input[type="text"], input[type="password"] {
+.login-form input[type="email"], input[type="password"] {
     height: 25px;
     color: white;
     font-size: 18px;
